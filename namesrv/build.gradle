@@ -1,0 +1,16 @@
+apply plugin: 'org.springframework.boot'
+
+group = 'com.xiaoma.redismq'
+archivesBaseName = 'namesrv'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+springBoot {
+	backupSource = false
+	mainClass = 'com.xiaoma.redismq.namesrv.NamesrvApplication'
+}
+
+
+dependencies {
+	compile project(':common')
+}
