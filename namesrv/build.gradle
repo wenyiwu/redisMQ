@@ -13,4 +13,5 @@ springBoot {
 
 dependencies {
 	compile project(':common')
+	compile project(':remoting')
 }
