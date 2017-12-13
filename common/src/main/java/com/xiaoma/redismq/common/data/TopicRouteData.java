@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TopicRouteData {
-    public List<TopicInfo> topicInfoList;
+    private List<TopicInfo> topicInfoList;
 
-    public List<BrokerData> brokerDataList;
+    private List<BrokerData> brokerDataList;
 }

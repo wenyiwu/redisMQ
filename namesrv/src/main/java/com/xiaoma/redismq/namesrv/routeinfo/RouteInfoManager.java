@@ -186,6 +186,7 @@ public class RouteInfoManager {
                         brokerDataList.add(brokerData);
                     }
                 });
+                topicRouteData.setBrokerDataList(brokerDataList);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();

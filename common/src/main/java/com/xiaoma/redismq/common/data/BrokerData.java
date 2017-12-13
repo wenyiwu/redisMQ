@@ -48,4 +48,29 @@ public class BrokerData {
             brokerInfoMap.get(brokerId).remove(brokerAddr);
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        BrokerData other = (BrokerData) obj;
+        if (brokerName == null) {
+            if (other.brokerName != null)
+                return false;
+        } else if (!brokerName.equals(other.brokerName))
+            return false;
+        if (clusterName == null) {
+            if (other.clusterName != null)
+                return false;
+        } else if (!clusterName.equals(other.clusterName))
+            return false;
+        if (size != other.size)
+            return false;
+
+        return true;
+    }
 }

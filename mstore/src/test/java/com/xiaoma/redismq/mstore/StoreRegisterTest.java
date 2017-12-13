@@ -1,5 +1,6 @@
 package com.xiaoma.redismq.mstore;
 
+import com.xiaoma.redismq.common.data.BrokerTopicInfo;
 import com.xiaoma.redismq.common.flag.BrokerFlag;
 import com.xiaoma.redismq.mstore.client.StoreRegisterClient;
 import com.xiaoma.redismq.remoting.request.RegisterBrokerRequest;
@@ -19,12 +20,15 @@ public class StoreRegisterTest {
         request.setBrokerId(BrokerFlag.BROKER_MASTER);
         request.setBrokerName("ma");
         request.setClusterName("xiao");
+        BrokerTopicInfo topicInfo = new BrokerTopicInfo();
+        topicInfo.newDefaultBrokerTopicInfo("ma");
+        request.setTopicInfo(topicInfo);
         StoreRegisterClient client = new StoreRegisterClient();
         client.addNameSrvAddr("127.0.0.1:8888");
         client.registerStore(request);
 
         while(true) {
-            Thread.sleep(10000);
+            Thread.sleep(30000);
             client.registerStore(request);
         }
     }
