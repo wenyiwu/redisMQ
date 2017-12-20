@@ -10,7 +10,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Getter
 @Setter
-@NoArgsConstructor
 public class RemotingCommand {
     //request type
     private int code;
@@ -19,9 +18,18 @@ public class RemotingCommand {
     private Object body;
     private String error;
     private String clientAddr;
-    private static AtomicInteger requestId = new AtomicInteger(0);
+    //private static AtomicInteger requestId = new AtomicInteger(0);
 
-    private int responseId = requestId.getAndIncrement();
+    private static ThreadLocal<AtomicInteger> requestId = new ThreadLocal<>();
+
+    private int responseId;
+
+    public RemotingCommand() {
+        if(requestId.get() == null) {
+            requestId.set(new AtomicInteger(0));
+        }
+        responseId  = requestId.get().incrementAndGet();
+    }
 
     public RemotingCommand(int code, Object body) {
         this.code = code;

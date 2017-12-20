@@ -1,7 +1,7 @@
 package com.xiaoma.redismq.mstore.client;
 
 import com.xiaoma.redismq.common.flag.ResponseFlag;
-import com.xiaoma.redismq.common.namesrv.BrokerSlaveResult;
+import com.xiaoma.redismq.remoting.response.BrokerSlaveResult;
 import com.xiaoma.redismq.mstore.config.StoreConfig;
 import com.xiaoma.redismq.remoting.netty.NettyClientConfig;
 import com.xiaoma.redismq.remoting.netty.NettyRemotingClient;
@@ -20,7 +20,6 @@ public class StoreRegisterClient{
     private List<String> nameSrvAddrList;
 
     private final StoreConfig storeConfig;
-
 
     public StoreRegisterClient() {
         remotingClient = new NettyRemotingClient(new NettyClientConfig());

@@ -2,7 +2,7 @@ package com.xiaoma.redismq.namesrv.processor;
 
 import com.xiaoma.redismq.common.data.TopicRouteData;
 import com.xiaoma.redismq.common.flag.ResponseFlag;
-import com.xiaoma.redismq.common.namesrv.BrokerSlaveResult;
+import com.xiaoma.redismq.remoting.response.BrokerSlaveResult;
 import com.xiaoma.redismq.namesrv.routeinfo.RouteInfoManager;
 import com.xiaoma.redismq.remoting.netty.NettyRequestProcessor;
 import com.xiaoma.redismq.remoting.process.RemotingCommand;
@@ -13,7 +13,7 @@ import io.netty.channel.ChannelHandlerContext;
 
 public class NameSrvRequestProcessor implements NettyRequestProcessor {
 
-    RouteInfoManager routeInfoManager;
+    private RouteInfoManager routeInfoManager;
 
     public NameSrvRequestProcessor(RouteInfoManager routeInfoManager) {
         this.routeInfoManager = routeInfoManager;
@@ -43,6 +43,7 @@ public class NameSrvRequestProcessor implements NettyRequestProcessor {
     private RemotingCommand registerBroker(ChannelHandlerContext ctx, RemotingCommand request) {
         RemotingCommand remotingCommand = new RemotingCommand();
         remotingCommand.setCode(ResponseFlag.RESPONSE);
+        remotingCommand.setResponseId(request.getResponseId());
         RegisterBrokerRequest brokerRequest = (RegisterBrokerRequest) request.getBody();
         BrokerSlaveResult brokerSlaveResult = routeInfoManager.registerBroker(brokerRequest, request.getClientAddr());
         remotingCommand.setBody(brokerSlaveResult);
@@ -57,6 +58,7 @@ public class NameSrvRequestProcessor implements NettyRequestProcessor {
     private RemotingCommand getRouteinfoByTopic(ChannelHandlerContext ctx, RemotingCommand request) {
         RemotingCommand remotingCommand = new RemotingCommand();
         remotingCommand.setCode(ResponseFlag.RESPONSE);
+        remotingCommand.setResponseId(request.getResponseId());
         RouteInfoRequest routeInfoRequest = (RouteInfoRequest) request.getBody();
         TopicRouteData topicRouteData = routeInfoManager.getTopicRouteDataByTopicName(routeInfoRequest.getTopicName());
         remotingCommand.setBody(topicRouteData);

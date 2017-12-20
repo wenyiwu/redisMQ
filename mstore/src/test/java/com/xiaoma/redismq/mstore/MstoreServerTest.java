@@ -1,6 +1,5 @@
-package com.xiaoma.redismq.namesrv;
+package com.xiaoma.redismq.mstore;
 
-import com.xiaoma.redismq.namesrv.processor.NameSrvRequestProcessor;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,15 +9,11 @@ import java.util.concurrent.Semaphore;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class BrokerRegisterTest {
-
+public class MstoreServerTest {
     @Test
-    public void contextLoads() throws Exception {
-        NameServerService nameServerService = new NameServerService();
-
-        nameServerService.start();
-
-        nameServerService.registerProcessor(new NameSrvRequestProcessor(nameServerService.getRouteInfoManager()));
+    public void mstoreServer() {
+        MstoreServer server = new MstoreServer();
+        server.start();
 
         //阻塞代码，不会占用CPU
         Semaphore semaphore = new Semaphore(0);

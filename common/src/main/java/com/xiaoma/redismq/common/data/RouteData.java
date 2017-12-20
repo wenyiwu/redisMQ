@@ -21,4 +21,11 @@ public class RouteData {
     public RouteData(BrokerData brokerData) {
         this.brokerData = brokerData;
     }
+
+    public String getBrokerName() {
+        if(brokerData != null) {
+            return brokerData.getBrokerName();
+        }
+        return null;
+    }
 }

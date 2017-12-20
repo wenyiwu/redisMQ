@@ -5,20 +5,20 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DefaultClient implements MQProducer{
+public class DefaultClient implements MQConsumer{
 
-    private DefaultProducerImpl defaultProducer;
+    private DefaultConsumerImpl defaultConsumer;
 
-    private String producerGroup;
+    private String consumerGroup;
 
     private String clientId;
 
     public DefaultClient() {
-        defaultProducer = new DefaultProducerImpl();
+        defaultConsumer = new DefaultConsumerImpl();
     }
 
     public void setNameSrvAddr(String addr) {
-        defaultProducer.getNameSrvClient().addNameSrvAddr(addr);
+        defaultConsumer.getNameSrvClient().addNameSrvAddr(addr);
     }
 
     @Override

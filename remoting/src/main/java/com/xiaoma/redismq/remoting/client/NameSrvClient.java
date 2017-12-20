@@ -2,13 +2,11 @@ package com.xiaoma.redismq.remoting.client;
 
 import com.xiaoma.redismq.common.data.TopicRouteData;
 import com.xiaoma.redismq.common.flag.ResponseFlag;
-import com.xiaoma.redismq.common.namesrv.BrokerSlaveResult;
 import com.xiaoma.redismq.remoting.netty.NettyClientConfig;
 import com.xiaoma.redismq.remoting.netty.NettyRemotingClient;
 import com.xiaoma.redismq.remoting.netty.RemotingClient;
 import com.xiaoma.redismq.remoting.process.RemotingCommand;
 import com.xiaoma.redismq.remoting.process.RequestCode;
-import com.xiaoma.redismq.remoting.request.RegisterBrokerRequest;
 import com.xiaoma.redismq.remoting.request.RouteInfoRequest;
 
 import java.util.LinkedList;
@@ -22,12 +20,17 @@ public class NameSrvClient {
     private List<String> nameSrvAddrList;
 
     public NameSrvClient() {
+        this(null);
+    }
+
+    public NameSrvClient(RouteService routeService) {
         remotingClient = new NettyRemotingClient(new NettyClientConfig());
 
         remotingClient.start();
 
         nameSrvAddrList = new LinkedList<>();
 
+        this.routeService = routeService;
     }
 
     public void addNameSrvAddr(String addr) {
@@ -41,7 +44,7 @@ public class NameSrvClient {
         remotingCommand.setType(RequestCode.GET_ROUTEINFO_BY_TOPIC);
         remotingCommand.setBody(request);
 
-        RemotingCommand response = remotingClient.invokeSync(nameSrvAddrList.get(0), remotingCommand, 100);
+        RemotingCommand response = remotingClient.invokeSync(nameSrvAddrList.get(0), remotingCommand, 2000);
         if(response == null) {
             return null;
         }else {

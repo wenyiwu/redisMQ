@@ -1,4 +1,4 @@
-package com.xiaoma.redismq.common.namesrv;
+package com.xiaoma.redismq.remoting.response;
 
 import lombok.Getter;
 import lombok.Setter;

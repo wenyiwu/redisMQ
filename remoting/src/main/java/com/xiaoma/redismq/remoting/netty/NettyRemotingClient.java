@@ -20,7 +20,6 @@ import java.net.SocketAddress;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadFactory;
@@ -133,6 +132,18 @@ public class NettyRemotingClient extends NettyRemotingBaseService implements Rem
     @Override
     public void registerProcessor(int requestCode, NettyRequestProcessor processor, ExecutorService executor) {
 
+    }
+
+    @Override
+    public void registerProcessor(NettyRequestProcessor processor) {
+        setNettyProcessor(processor);
+    }
+
+    public void closeChannel(String addr) {
+        ChannelWrapper channel = channelTables.get(addr);
+        if(channel != null) {
+            closeChannel(addr, channel.getChannel());
+        }
     }
 
     public void closeChannel(final Channel channel) {
@@ -280,6 +291,10 @@ public class NettyRemotingClient extends NettyRemotingBaseService implements Rem
         for(String addr : strings) {
             nameServerList.add(addr);
         }
+    }
+
+    public void addNameServer(String nameSrvAddr) {
+        nameServerList.add(nameSrvAddr);
     }
 
     static class ChannelWrapper {

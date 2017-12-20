@@ -3,9 +3,10 @@ package com.xiaoma.redismq.mstore.config;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Size;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
+import java.util.*;
 
 @Getter
 @Setter
@@ -25,6 +26,12 @@ public class StoreConfig {
 
     private int storeId;
 
+//    private List<String> topicList = new LinkedList<>();
+
+    private Map<String /*topic*/, Integer /*queueSize*/> topicMap = new HashMap<>();
+
+    private int listenPort = 8866;
+
     public StoreConfig() {
         try {
             Properties pro = new Properties();
@@ -33,7 +40,8 @@ public class StoreConfig {
             clusterName = pro.getProperty("mstore.clusterName");
             brokerName = pro.getProperty("mstore.brokerName");
             brokerAddr = pro.getProperty("mstore.brokerAddr");
-            brokerAddr = pro.getProperty("mstore.brokerId");
+            storeId = Integer.parseInt(pro.getProperty("mstore.brokerId"));
+            topicMap.put("push", 4);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -24,7 +24,7 @@ public class BrokerTopicInfo {
         topicInfo.setPerm(0);
         topicInfo.setReadQueueNum(4);
         topicInfo.setWriteQueueNum(4);
-        topicInfo.setTopicName("topic");
-        topicMap.put("topic", topicInfo);
+        topicInfo.setTopicName("push");
+        topicMap.put("push", topicInfo);
     }
 }

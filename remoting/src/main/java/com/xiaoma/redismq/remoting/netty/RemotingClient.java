@@ -25,7 +25,11 @@ public interface RemotingClient extends RemotingService {
     void registerProcessor(final int requestCode, final NettyRequestProcessor processor,
                                   final ExecutorService executor);
 
+    void registerProcessor(final NettyRequestProcessor processor);
+
     Channel choiceNameServerChannel(final String addr) throws InterruptedException;
+
+    void closeChannel(String addr);
 
 
     }

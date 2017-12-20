@@ -9,6 +9,7 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
 * 处理消息接收，消息发送，记录client连接状态并做相应处理，检测是否有broker心跳停止
@@ -17,7 +18,7 @@ public abstract class NettyRemotingBaseService {
 
     protected NettyRequestProcessor nettyProcessor;
 
-    private HashMap<Integer, ResponseFuture> responseMap = new HashMap<>(256);
+    private ConcurrentHashMap<Integer, ResponseFuture> responseMap = new ConcurrentHashMap<>(256);
 
     protected ChannelEventListener eventListener;
 
@@ -46,6 +47,8 @@ public abstract class NettyRemotingBaseService {
     }
 
     protected void processResponseCommand(ChannelHandlerContext ctx, RemotingCommand msg) {
+        System.out.println("responsId : " + msg.getResponseId());
+
         ResponseFuture responseFuture = responseMap.get(msg.getResponseId());
         System.out.println("recive msg: " + msg.toString());
 
@@ -67,6 +70,7 @@ public abstract class NettyRemotingBaseService {
         ResponseFuture responseFuture = new ResponseFuture(timeOutMillis, null);
 
         responseMap.put(remotingCommand.getResponseId(), responseFuture);
+        System.out.println("responsId : " + remotingCommand.getResponseId());
         RemotingCommand response = null;
         try {
             channel.writeAndFlush(remotingCommand).addListener(new ChannelFutureListener() {

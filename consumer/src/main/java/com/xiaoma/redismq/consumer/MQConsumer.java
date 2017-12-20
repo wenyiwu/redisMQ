@@ -5,5 +5,5 @@ public interface MQConsumer {
 
     void shutDown();
 
-    /*recive function*/
+    /*send function*/
 }

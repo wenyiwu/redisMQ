@@ -72,4 +72,10 @@ public class CommonUtil {
         InetSocketAddress isa = new InetSocketAddress(s[0], Integer.parseInt(s[1]));
         return isa;
     }
+
+    public static String createClientId() {
+        Long time = System.currentTimeMillis() / 1000000000 / 64;
+        time += Thread.currentThread().getId();
+        return time.toString();
+    }
 }

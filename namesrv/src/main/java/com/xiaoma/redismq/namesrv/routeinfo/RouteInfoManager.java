@@ -3,10 +3,9 @@ package com.xiaoma.redismq.namesrv.routeinfo;
 import com.xiaoma.redismq.common.data.*;
 import com.xiaoma.redismq.common.flag.BrokerFlag;
 import com.xiaoma.redismq.common.flag.CharFlag;
-import com.xiaoma.redismq.common.namesrv.BrokerSlaveResult;
+import com.xiaoma.redismq.remoting.response.BrokerSlaveResult;
 import com.xiaoma.redismq.remoting.request.RegisterBrokerRequest;
 import io.netty.channel.Channel;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -16,21 +15,21 @@ public class RouteInfoManager {
 
     private HashMap<String /*topic*/, List<TopicInfo>> topicQueueMap;
 
-    private HashMap<String /*clusterName*/, Set<String /*brokerName*/>> clusterInfoMap;
+//    private HashMap<String /*clusterName*/, Set<String /*brokerName*/>> clusterInfoMap;
 
     private HashMap<String /*brokerName*/, BrokerData> brokerDataMap;
 
     private HashMap<String /*clientAddr*/, String /*serverAddr*/> addrSwitchMap;
 
-    private HashMap<String /*brokerAddr*/, BrokerLiveInfo> brokerLiveInfoMap;
+//    private HashMap<String /*brokerAddr*/, BrokerLiveInfo> brokerLiveInfoMap;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
     public RouteInfoManager() {
         topicQueueMap = new HashMap<>();
-        clusterInfoMap = new HashMap<>();
+//        clusterInfoMap = new HashMap<>();
         brokerDataMap = new HashMap<>();
-        brokerLiveInfoMap = new HashMap<>();
+//        brokerLiveInfoMap = new HashMap<>();
         addrSwitchMap = new HashMap<>();
     }
 
@@ -46,13 +45,13 @@ public class RouteInfoManager {
 
         try{
             lock.writeLock().lockInterruptibly();
-            //先更新 clusterInfoMap
+         /*   //先更新 clusterInfoMap
             Set<String> brokerNameSet = clusterInfoMap.get(clusterName);
             if(brokerNameSet ==  null) {
                 brokerNameSet = new HashSet<>();
                 clusterInfoMap.put(clusterName, brokerNameSet);
             }
-            brokerNameSet.add(brokerName);
+            brokerNameSet.add(brokerName);*/
 
             //更新 addrSwitchMap
             addrSwitchMap.put(clientAddr, brokerAddr);
@@ -133,11 +132,11 @@ public class RouteInfoManager {
         try {
             lock.writeLock().lockInterruptibly();
             String topicName;
-            // 移除集群信息
+         /*   // 移除集群信息
             Set<String> brokerNameSet = clusterInfoMap.get(clusterName);
             if(brokerNameSet != null) {
                 brokerNameSet.remove(brokerName);
-            }
+            }*/
 
             //移除broker信息
             BrokerData brokerData = brokerDataMap.get(brokerName);
@@ -174,19 +173,19 @@ public class RouteInfoManager {
     //private
     public TopicRouteData getTopicRouteDataByTopicName(String topicName) {
         TopicRouteData topicRouteData = new TopicRouteData();
-        List<BrokerData> brokerDataList = new LinkedList<>();
+        List<BrokerTopicResult> brokerTopicResults = new LinkedList<>();
         try {
             lock.readLock().lockInterruptibly();
             List<TopicInfo> topicInfoList = topicQueueMap.get(topicName);
             if(topicInfoList != null) {
-                topicRouteData.setTopicInfoList(topicInfoList);
-                topicInfoList.forEach((topic)->{
-                    BrokerData brokerData = brokerDataMap.get(topic.getBrokerName());
+                for (TopicInfo topicInfo : topicInfoList) {
+                    BrokerData brokerData = brokerDataMap.get(topicInfo.getBrokerName());
                     if(brokerData != null) {
-                        brokerDataList.add(brokerData);
+                        BrokerTopicResult brokerTopicResult = new BrokerTopicResult(topicInfo, brokerData);
+                        brokerTopicResults.add(brokerTopicResult);
                     }
-                });
-                topicRouteData.setBrokerDataList(brokerDataList);
+                }
+                topicRouteData.setBrokerTopicResultList(brokerTopicResults);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -233,7 +232,7 @@ public class RouteInfoManager {
                         }
                     }
 
-                    if (brokerNameFound != null && removeBrokerName) {
+/*                    if (brokerNameFound != null && removeBrokerName) {
                         Iterator<Map.Entry<String, Set<String>>> it = this.clusterInfoMap.entrySet().iterator();
                         while (it.hasNext()) {
                             Map.Entry<String, Set<String>> entry = it.next();
@@ -245,7 +244,7 @@ public class RouteInfoManager {
                                 break;
                             }
                         }
-                    }
+                    }*/
 
                     if (removeBrokerName) {
                         Iterator<Map.Entry<String, List<TopicInfo>>> itTopicQueueTable =
